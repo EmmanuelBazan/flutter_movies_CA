@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_movies_ca/app/data/repositories_implementation/authentication_repository_impl.dart';
 import 'package:flutter_movies_ca/app/data/repositories_implementation/connectivity_repository_impl.dart';
@@ -7,7 +8,7 @@ import 'package:flutter_movies_ca/app/my_app.dart';
 
 void main() => runApp(Injector(
       authentificationRepository: AuthenticationRepositoryImpl(),
-      connectivityRepository: ConnectivityRepositoryImpl(),
+      connectivityRepository: ConnectivityRepositoryImpl(Connectivity()),
       child: const MyApp(),
     ));
 

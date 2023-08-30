@@ -3,9 +3,9 @@ import 'package:flutter_movies_ca/app/domain/repositories/authentication_reposit
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
-  Future<User> getUserData() {
+  Future<User?> getUserData() {
     // TODO: implement getUserData
-    return Future.value(User());
+    return Future.value(null);
   }
 
   @override

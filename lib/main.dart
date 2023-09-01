@@ -6,9 +6,11 @@ import 'package:flutter_movies_ca/app/data/services/remote/internet_checker.dart
 import 'package:flutter_movies_ca/app/domain/repositories/authentication_repository.dart';
 import 'package:flutter_movies_ca/app/domain/repositories/connectivity_repository.dart';
 import 'package:flutter_movies_ca/app/my_app.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() => runApp(Injector(
-      authentificationRepository: AuthenticationRepositoryImpl(),
+      authentificationRepository:
+          AuthenticationRepositoryImpl(const FlutterSecureStorage()),
       connectivityRepository: ConnectivityRepositoryImpl(
         Connectivity(),
         InternetChecker(),

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_movies_ca/app/data/services/remote/internet_checker.dart';
 import 'package:flutter_movies_ca/app/domain/repositories/connectivity_repository.dart';

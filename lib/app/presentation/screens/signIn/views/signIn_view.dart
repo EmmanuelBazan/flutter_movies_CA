@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_movies_ca/app/domain/enums.dart';
+import 'package:flutter_movies_ca/app/presentation/routes/routes.dart';
+import 'package:flutter_movies_ca/main.dart';
 
 class SignInView extends StatefulWidget {
   const SignInView({Key? key}) : super(key: key);
@@ -9,6 +12,7 @@ class SignInView extends StatefulWidget {
 
 class _SignInViewState extends State<SignInView> {
   String _username = '', _password = '';
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -17,69 +21,110 @@ class _SignInViewState extends State<SignInView> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
         child: Form(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextFormField(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                onChanged: (text) {
-                  setState(() {
-                    _username = text.trim().toLowerCase();
-                  });
-                },
-                decoration: const InputDecoration(hintText: 'username'),
-                validator: (text) {
-                  final currText = text?.trim().toLowerCase() ?? '';
-                  if (currText.isEmpty) {
-                    return 'Invalid username';
-                  }
-
-                  return null;
-                },
-              ),
-              TextFormField(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                onChanged: (text) {
-                  setState(() {
-                    _password = text.replaceAll(' ', '');
-                  });
-                },
-                decoration: const InputDecoration(hintText: 'password'),
-                validator: (text) {
-                  final currText = text?.trim().toLowerCase() ?? '';
-                  if (currText.length < 4) {
-                    return 'Invalid password';
-                  }
-
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              Builder(builder: (context) {
-                return MaterialButton(
-                  onPressed: () {
-                    final isValid = Form.of(context)!.validate();
-                    if (isValid) {}
+          child: AbsorbPointer(
+            absorbing: _loading,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  onChanged: (text) {
+                    setState(() {
+                      _username = text.trim().toLowerCase();
+                    });
                   },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.lightBlue[900],
-                      borderRadius: BorderRadius.circular(10),
+                  decoration: const InputDecoration(hintText: 'username'),
+                  validator: (text) {
+                    final currText = text?.trim().toLowerCase() ?? '';
+                    if (currText.isEmpty) {
+                      return 'Invalid username';
+                    }
+
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  onChanged: (text) {
+                    setState(() {
+                      _password = text.replaceAll(' ', '');
+                    });
+                  },
+                  decoration: const InputDecoration(hintText: 'password'),
+                  validator: (text) {
+                    final currText = text?.trim().toLowerCase() ?? '';
+                    if (currText.length < 4) {
+                      return 'Invalid password';
+                    }
+
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                Builder(builder: (context) {
+                  return MaterialButton(
+                    onPressed: () {
+                      final isValid = Form.of(context)!.validate();
+                      if (isValid) {
+                        _submit(context);
+                      }
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.lightBlue[900],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: _loading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : const Text(
+                              'Sign In',
+                              style: TextStyle(color: Colors.white),
+                            ),
                     ),
-                    child: const Text(
-                      'Sign In',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                );
-              })
-            ],
+                  );
+                })
+              ],
+            ),
           ),
         ),
       ),
     ));
+  }
+
+  Future<void> _submit(BuildContext context) async {
+    setState(() {
+      _loading = true;
+    });
+
+    final res = await Injector.of(context).authentificationRepository.signIn(
+          _username,
+          _password,
+        );
+
+    if (!mounted) {
+      return;
+    }
+
+    res.when((failure) {
+      setState(() {
+        _loading = false;
+      });
+      final message = {
+        SignInFailure.notFound: 'Invalid user',
+        SignInFailure.unauthorized: 'Invalid password',
+        SignInFailure.unknown: '',
+      }[failure];
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(message!),
+      ));
+    }, (success) {
+      Navigator.pushReplacementNamed(context, Routes.homeScreen);
+    });
   }
 }

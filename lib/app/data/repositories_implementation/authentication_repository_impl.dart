@@ -1,3 +1,4 @@
+import 'package:flutter_movies_ca/app/data/services/remote/authentication_api.dart';
 import 'package:flutter_movies_ca/app/domain/either.dart';
 import 'package:flutter_movies_ca/app/domain/enums.dart';
 import 'package:flutter_movies_ca/app/domain/models/user.dart';
@@ -8,8 +9,12 @@ const _key = 'sessionId';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final FlutterSecureStorage _secureStorage;
+  final AuthenticationAPI _authenticationAPI;
 
-  AuthenticationRepositoryImpl(this._secureStorage);
+  AuthenticationRepositoryImpl(
+    this._secureStorage,
+    this._authenticationAPI,
+  );
 
   @override
   Future<User?> getUserData() {
@@ -28,6 +33,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     String username,
     String password,
   ) async {
+    await _authenticationAPI.createRequestToken();
+
     await Future.delayed(const Duration(seconds: 2));
 
     if (username != 'test') {

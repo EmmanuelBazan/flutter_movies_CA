@@ -14,7 +14,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
   Future<User?> getUserData() {
     // TODO: implement getUserData
-    return Future.value(null);
+    return Future.value(User());
   }
 
   @override
@@ -38,6 +38,13 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return Either.left(SignInFailure.unauthorized);
     }
 
+    await _secureStorage.write(key: _key, value: '123456');
+
     return Either.right(User());
+  }
+
+  @override
+  Future<void> signOut() {
+    return _secureStorage.delete(key: _key);
   }
 }

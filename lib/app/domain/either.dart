@@ -14,8 +14,8 @@ class Either<Left, Right> {
   }
 
   T when<T>(
-    Function left,
-    Function right,
+    T Function(Left) left,
+    T Function(Right) right,
   ) {
     if (isLeft) {
       return left(_left!);

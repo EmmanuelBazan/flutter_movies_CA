@@ -30,12 +30,12 @@ class _SignInViewState extends State<SignInView> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   onChanged: (text) {
                     setState(() {
-                      _username = text.trim().toLowerCase();
+                      _username = text.trim();
                     });
                   },
                   decoration: const InputDecoration(hintText: 'username'),
                   validator: (text) {
-                    final currText = text?.trim().toLowerCase() ?? '';
+                    final currText = text?.trim() ?? '';
                     if (currText.isEmpty) {
                       return 'Invalid username';
                     }
@@ -52,7 +52,7 @@ class _SignInViewState extends State<SignInView> {
                   },
                   decoration: const InputDecoration(hintText: 'password'),
                   validator: (text) {
-                    final currText = text?.trim().toLowerCase() ?? '';
+                    final currText = text?.trim() ?? '';
                     if (currText.length < 4) {
                       return 'Invalid password';
                     }

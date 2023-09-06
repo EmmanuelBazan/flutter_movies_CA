@@ -18,7 +18,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<User?> getUserData() {
-    // TODO: implement getUserData
     return Future.value(User());
   }
 
@@ -33,21 +32,37 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     String username,
     String password,
   ) async {
-    await _authenticationAPI.createRequestToken();
+    final reqToken = await _authenticationAPI.createRequestToken();
 
-    await Future.delayed(const Duration(seconds: 2));
-
-    if (username != 'test') {
-      return Either.left(SignInFailure.notFound);
+    if (reqToken == null) {
+      return Either.left(SignInFailure.unknown);
     }
 
-    if (password != '123456') {
-      return Either.left(SignInFailure.unauthorized);
-    }
+    final loginRes = await _authenticationAPI.createRequestWithLogin(
+      username: username,
+      password: password,
+      requestToken: reqToken,
+    );
 
-    await _secureStorage.write(key: _key, value: '123456');
+    return loginRes.when(
+      (failure) async {
+        return Either.left(failure);
+      },
+      (newToken) async {
+        final res = await _authenticationAPI.createSession(newToken);
 
-    return Either.right(User());
+        return res.when(
+          (failure) async => Either.left(failure),
+          (sessionID) async {
+            await _secureStorage.write(key: _key, value: sessionID);
+
+            return Either.right(
+              User(),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override

@@ -34,30 +34,31 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   ) async {
     final reqToken = await _authenticationAPI.createRequestToken();
 
-    if (reqToken == null) {
-      return Either.left(SignInFailure.unknown);
-    }
+    return reqToken.when(
+      (failure) async => Either.left(failure),
+      (token) async {
+        final loginRes = await _authenticationAPI.createRequestWithLogin(
+          username: username,
+          password: password,
+          requestToken: token,
+        );
 
-    final loginRes = await _authenticationAPI.createRequestWithLogin(
-      username: username,
-      password: password,
-      requestToken: reqToken,
-    );
+        return loginRes.when(
+          (failure) async {
+            return Either.left(failure);
+          },
+          (newToken) async {
+            final res = await _authenticationAPI.createSession(newToken);
 
-    return loginRes.when(
-      (failure) async {
-        return Either.left(failure);
-      },
-      (newToken) async {
-        final res = await _authenticationAPI.createSession(newToken);
+            return res.when(
+              (failure) async => Either.left(failure),
+              (sessionID) async {
+                await _secureStorage.write(key: _key, value: sessionID);
 
-        return res.when(
-          (failure) async => Either.left(failure),
-          (sessionID) async {
-            await _secureStorage.write(key: _key, value: sessionID);
-
-            return Either.right(
-              User(),
+                return Either.right(
+                  User(),
+                );
+              },
             );
           },
         );

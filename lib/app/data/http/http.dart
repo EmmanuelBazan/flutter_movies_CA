@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_movies_ca/app/domain/either.dart';
 import 'package:http/http.dart';
 
@@ -26,6 +28,8 @@ class Http {
     Map<String, dynamic> body = const {},
     bool useApiKey = true,
   }) async {
+    Map<String, dynamic> logs = {};
+    StackTrace? stackTrace;
     try {
       queryParameters = {
         ...queryParameters,
@@ -40,6 +44,12 @@ class Http {
       headers = {'Content-Type': 'application/json', ...headers};
 
       final bodyString = jsonEncode(body);
+
+      logs = {
+        '✅ url': url.toString(),
+        '✅ method': method.toString(),
+        '✅ body': body.toString(),
+      };
 
       late final Response response;
       switch (method) {
@@ -69,17 +79,40 @@ class Http {
 
       final statusCode = response.statusCode;
 
+      logs = {
+        ...logs,
+        '✅ statusCode': statusCode,
+        '✅ response': response.body,
+      };
+
       if (statusCode >= 200 && statusCode < 300) {
         return Either.right(onSuccess(response.body));
       }
 
       return Either.left(HttpFailure(statuscode: statusCode));
-    } catch (e) {
+    } catch (e, s) {
+      stackTrace = s;
+      logs = {
+        ...logs,
+        '🚨🚨🚨 exception': e.runtimeType,
+      };
+
       if (e is SocketException || e is ClientException) {
+        logs = {
+          ...logs,
+          '🚨🚨🚨 exception': 'NetworkException',
+        };
         return Either.left(HttpFailure(exception: NetworkException()));
       }
 
       return Either.left(HttpFailure(exception: e));
+    } finally {
+      if (kDebugMode) {
+        log(
+          '''--------------------------------------${const JsonEncoder.withIndent(' ').convert(logs)}--------------------------------------''',
+          stackTrace: stackTrace,
+        );
+      }
     }
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_movies_ca/app/data/http/http.dart';
 import 'package:flutter_movies_ca/app/domain/either.dart';
 import 'package:flutter_movies_ca/app/domain/enums.dart';
@@ -34,7 +32,7 @@ class AuthenticationAPI {
     final res = await _http.request(
       '/authentication/token/new',
       (responseBody) {
-        final decoded = jsonDecode(responseBody);
+        final decoded = responseBody as Map;
         return decoded['request_token'] as String;
       },
     );
@@ -53,7 +51,7 @@ class AuthenticationAPI {
     final res = await _http.request(
       '/authentication/token/validate_with_login',
       (responseBody) {
-        final decoded = jsonDecode(responseBody);
+        final decoded = responseBody as Map;
         return decoded['request_token'] as String;
       },
       method: HttpMethod.post,
@@ -74,7 +72,7 @@ class AuthenticationAPI {
     final res = await _http.request(
       '/authentication/session/new',
       (responseBody) {
-        final decoded = jsonDecode(responseBody);
+        final decoded = responseBody as Map;
         return decoded['session_id'];
       },
       method: HttpMethod.post,

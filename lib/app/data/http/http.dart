@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_movies_ca/app/domain/either.dart';
 import 'package:http/http.dart';
 
+part 'failure.dart';
+
 class Http {
   final String _baseUrl;
   final Client _client;
@@ -21,7 +23,7 @@ class Http {
 
   Future<Either<HttpFailure, T>> request<T>(
     String path,
-    T Function(String responseBody) onSuccess, {
+    T Function(dynamic responseBody) onSuccess, {
     HttpMethod method = HttpMethod.get,
     Map<String, String> headers = const {},
     Map<String, String> queryParameters = const {},
@@ -79,14 +81,16 @@ class Http {
 
       final statusCode = response.statusCode;
 
+      final decodedRes = _parseResponseBody(response.body);
+
       logs = {
         ...logs,
         '✅ statusCode': statusCode,
-        '✅ response': response.body,
+        '✅ response': decodedRes,
       };
 
       if (statusCode >= 200 && statusCode < 300) {
-        return Either.right(onSuccess(response.body));
+        return Either.right(onSuccess(decodedRes));
       }
 
       return Either.left(HttpFailure(statuscode: statusCode));
@@ -117,19 +121,18 @@ class Http {
   }
 }
 
-class HttpFailure {
-  final int? statuscode;
-  final Object? exception;
-
-  HttpFailure({this.statuscode, this.exception});
-}
-
-class NetworkException {}
-
 enum HttpMethod {
   get,
   post,
   patch,
   delete,
   put,
+}
+
+dynamic _parseResponseBody(String responseBody) {
+  try {
+    return jsonDecode(responseBody);
+  } catch (e) {
+    return responseBody;
+  }
 }

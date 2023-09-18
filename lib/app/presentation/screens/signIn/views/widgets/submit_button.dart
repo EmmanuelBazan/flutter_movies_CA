@@ -27,7 +27,7 @@ class SubmitButton extends StatelessWidget {
           color: Colors.lightBlue[900],
           borderRadius: BorderRadius.circular(10),
         ),
-        child: controller.loading
+        child: controller.state.loading
             ? const CircularProgressIndicator(
                 color: Colors.white,
               )
@@ -45,8 +45,8 @@ class SubmitButton extends StatelessWidget {
     controller.onLoadingChanged(true);
 
     final res = await context.read<AuthenticationRepository>().signIn(
-          controller.username,
-          controller.password,
+          controller.state.username,
+          controller.state.password,
         );
 
     if (!controller.mounted) {

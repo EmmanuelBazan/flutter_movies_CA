@@ -18,7 +18,7 @@ class SignInView extends StatelessWidget {
             child: Builder(builder: (context) {
               final controller = Provider.of<SignInController>(context);
               return AbsorbPointer(
-                absorbing: controller.loading,
+                absorbing: controller.state.loading,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

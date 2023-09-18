@@ -1,24 +1,30 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_movies_ca/app/presentation/screens/signIn/controller/sign_in_state.dart';
 
 class SignInController extends ChangeNotifier {
-  String _username = '', _password = '';
-  bool _loading = false, _mounted = true;
+  SignInState _state = SignInState();
 
-  String get username => _username;
-  String get password => _password;
-  bool get loading => _loading;
+  bool _mounted = true;
+
+  SignInState get state => _state;
   bool get mounted => _mounted;
 
   void onUserNameChanged(String text) {
-    _username = text.trim();
+    _state = _state.copyWith(
+      username: text.trim(),
+    );
   }
 
   void onPasswordChanged(String text) {
-    _password = text.replaceAll(' ', '');
+    _state = _state.copyWith(
+      password: text.replaceAll(' ', ''),
+    );
   }
 
   void onLoadingChanged(bool value) {
-    _loading = value;
+    _state = _state.copyWith(
+      loading: value,
+    );
     notifyListeners();
   }
 

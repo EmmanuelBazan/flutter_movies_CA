@@ -2,11 +2,12 @@ import 'package:flutter/foundation.dart';
 
 class SignInController extends ChangeNotifier {
   String _username = '', _password = '';
-  bool _loading = false;
+  bool _loading = false, _mounted = true;
 
   String get username => _username;
   String get password => _password;
   bool get loading => _loading;
+  bool get mounted => _mounted;
 
   void onUserNameChanged(String text) {
     _username = text.trim();
@@ -19,5 +20,11 @@ class SignInController extends ChangeNotifier {
   void onLoadingChanged(bool value) {
     _loading = value;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _mounted = false;
+    super.dispose();
   }
 }

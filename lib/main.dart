@@ -10,39 +10,26 @@ import 'package:flutter_movies_ca/app/domain/repositories/connectivity_repositor
 import 'package:flutter_movies_ca/app/my_app.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(Injector(
-      authentificationRepository: AuthenticationRepositoryImpl(
-          const FlutterSecureStorage(),
-          AuthenticationAPI(Http(
-            apiKey: '7de4526afb410af4f76b69c33bcdc202',
-            baseUrl: 'https://api.themoviedb.org/3',
-            client: Client(),
-          ))),
-      connectivityRepository: ConnectivityRepositoryImpl(
-        Connectivity(),
-        InternetChecker(),
+void main() => runApp(
+      Provider<ConnectivityRepository>(
+        create: (context) => ConnectivityRepositoryImpl(
+          Connectivity(),
+          InternetChecker(),
+        ),
+        child: Provider<AuthenticationRepository>(
+          create: (context) => AuthenticationRepositoryImpl(
+            const FlutterSecureStorage(),
+            AuthenticationAPI(
+              Http(
+                apiKey: '7de4526afb410af4f76b69c33bcdc202',
+                baseUrl: 'https://api.themoviedb.org/3',
+                client: Client(),
+              ),
+            ),
+          ),
+          child: const MyApp(),
+        ),
       ),
-      child: const MyApp(),
-    ));
-
-class Injector extends InheritedWidget {
-  const Injector({
-    super.key,
-    required super.child,
-    required this.connectivityRepository,
-    required this.authentificationRepository,
-  });
-
-  final ConnectivityRepository connectivityRepository;
-  final AuthenticationRepository authentificationRepository;
-
-  @override
-  bool updateShouldNotify(_) => false;
-
-  static Injector of(BuildContext context) {
-    final injector = context.dependOnInheritedWidgetOfExactType<Injector>();
-    assert(injector != null, 'Injector could not be found');
-    return injector!;
-  }
-}
+    );

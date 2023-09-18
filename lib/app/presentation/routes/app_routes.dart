@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_movies_ca/app/presentation/routes/routes.dart';
 import 'package:flutter_movies_ca/app/presentation/screens/home/views/home_view.dart';
 import 'package:flutter_movies_ca/app/presentation/screens/offline/views/offline_view.dart';
-import 'package:flutter_movies_ca/app/presentation/screens/signIn/views/signIn_view.dart';
+import 'package:flutter_movies_ca/app/presentation/screens/signIn/views/signin_view.dart';
 import 'package:flutter_movies_ca/app/presentation/screens/splash/views/splash_view.dart';
 
 Map<String, Widget Function(BuildContext)> get appRoutes {

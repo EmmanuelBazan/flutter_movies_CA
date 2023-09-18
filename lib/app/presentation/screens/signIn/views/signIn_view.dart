@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_movies_ca/app/domain/enums.dart';
+import 'package:flutter_movies_ca/app/domain/repositories/authentication_repository.dart';
 import 'package:flutter_movies_ca/app/presentation/routes/routes.dart';
-import 'package:flutter_movies_ca/main.dart';
+import 'package:provider/provider.dart';
 
 class SignInView extends StatefulWidget {
   const SignInView({Key? key}) : super(key: key);
@@ -101,10 +102,13 @@ class _SignInViewState extends State<SignInView> {
       _loading = true;
     });
 
-    final res = await Injector.of(context).authentificationRepository.signIn(
-          _username,
-          _password,
-        );
+    final res = await Provider.of<AuthenticationRepository>(
+      context,
+      listen: false,
+    ).signIn(
+      _username,
+      _password,
+    );
 
     if (!mounted) {
       return;

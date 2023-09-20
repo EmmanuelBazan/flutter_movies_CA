@@ -14,7 +14,7 @@ abstract class StateNotifier<T> extends ChangeNotifier {
   StateNotifier(this._state);
 
   void onlyUpdate(T newState) {
-    _updateState(state, notify: false);
+    _updateState(newState, notify: false);
   }
 
   void _updateState(T state, {bool notify = true}) {

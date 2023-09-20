@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_movies_ca/app/presentation/screens/signIn/controller/sign_in_controller.dart';
+import 'package:flutter_movies_ca/app/presentation/screens/signIn/controller/sign_in_state.dart';
 import 'package:flutter_movies_ca/app/presentation/screens/signIn/views/widgets/submit_button.dart';
 import 'package:provider/provider.dart';
 
@@ -9,7 +10,9 @@ class SignInView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<SignInController>(
-      create: (_) => SignInController(),
+      create: (_) => SignInController(
+        SignInState(),
+      ),
       child: Scaffold(
           body: SafeArea(
         child: Padding(

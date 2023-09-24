@@ -12,6 +12,7 @@ import 'package:flutter_movies_ca/app/domain/repositories/account_repository.dar
 import 'package:flutter_movies_ca/app/domain/repositories/authentication_repository.dart';
 import 'package:flutter_movies_ca/app/domain/repositories/connectivity_repository.dart';
 import 'package:flutter_movies_ca/app/my_app.dart';
+import 'package:flutter_movies_ca/app/presentation/global/controllers/session_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +48,10 @@ void main() {
             AccountApi(http),
             SessionService(const FlutterSecureStorage()),
           ),
+        ),
+        //& Session controller
+        ChangeNotifierProvider<SessionController>(
+          create: (_) => SessionController(),
         )
       ],
       child: const MyApp(),

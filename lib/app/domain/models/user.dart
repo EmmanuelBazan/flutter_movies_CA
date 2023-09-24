@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class UserModel {
+import 'package:equatable/equatable.dart';
+
+class UserModel extends Equatable {
   int id;
   String username;
 
@@ -22,4 +24,11 @@ class UserModel {
         "id": id,
         "username": username,
       };
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [
+        id,
+        username,
+      ];
 }

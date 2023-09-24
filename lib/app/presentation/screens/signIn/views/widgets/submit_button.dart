@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_movies_ca/app/domain/enums.dart';
 import 'package:flutter_movies_ca/app/domain/repositories/authentication_repository.dart';
+import 'package:flutter_movies_ca/app/presentation/global/controllers/session_controller.dart';
 import 'package:flutter_movies_ca/app/presentation/routes/routes.dart';
 import 'package:flutter_movies_ca/app/presentation/screens/signIn/controller/sign_in_controller.dart';
 import 'package:provider/provider.dart';
@@ -59,7 +60,9 @@ class SubmitButton extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(message!),
       ));
-    }, (success) {
+    }, (user) {
+      final SessionController sessionController = context.read();
+      sessionController.setUser(user);
       Navigator.pushReplacementNamed(context, Routes.homeScreen);
     });
   }

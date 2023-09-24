@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_movies_ca/app/domain/repositories/authentication_repository.dart';
 import 'package:flutter_movies_ca/app/presentation/global/controllers/session_controller.dart';
 import 'package:flutter_movies_ca/app/presentation/routes/routes.dart';
 import 'package:provider/provider.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
 
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final SessionController sessionController = Provider.of(context);
@@ -20,8 +24,10 @@ class HomeView extends StatelessWidget {
           Text(user.username),
           TextButton(
               onPressed: () async {
-                context.read<AuthenticationRepository>().signOut();
-                Navigator.pushReplacementNamed(context, Routes.signInScreen);
+                await sessionController.signOut();
+                if (mounted) {
+                  Navigator.pushReplacementNamed(context, Routes.signInScreen);
+                }
               },
               child: Text(
                 'sign out',

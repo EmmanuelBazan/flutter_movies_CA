@@ -51,7 +51,7 @@ void main() {
         ),
         //& Session controller
         ChangeNotifierProvider<SessionController>(
-          create: (_) => SessionController(),
+          create: (context) => SessionController(context.read()),
         )
       ],
       child: const MyApp(),

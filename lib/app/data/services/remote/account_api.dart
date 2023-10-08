@@ -9,10 +9,7 @@ class AccountApi {
   Future<UserModel?> getAccount(String sessionId) async {
     final res = await _http.request(
       '/account',
-      (responseBody) => UserModel(
-        id: responseBody['id'],
-        username: responseBody['username'],
-      ),
+      (responseBody) => UserModel.fromMap(responseBody),
       queryParameters: {'session_id': sessionId},
     );
 

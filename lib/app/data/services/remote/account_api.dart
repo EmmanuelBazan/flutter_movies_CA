@@ -1,5 +1,5 @@
 import 'package:flutter_movies_ca/app/data/http/http.dart';
-import 'package:flutter_movies_ca/app/domain/models/user.dart';
+import 'package:flutter_movies_ca/app/domain/models/user/user.dart';
 
 class AccountApi {
   final Http _http;

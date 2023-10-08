@@ -1,4 +1,4 @@
-import 'package:flutter_movies_ca/app/domain/models/user.dart';
+import 'package:flutter_movies_ca/app/domain/models/user/user.dart';
 import 'package:flutter_movies_ca/app/domain/repositories/authentication_repository.dart';
 import 'package:flutter_movies_ca/app/presentation/global/widgets/state_notifier.dart';
 

@@ -9,6 +9,7 @@ part 'user.g.dart';
 class UserModel extends Equatable {
   final int id;
   final String username;
+  @JsonKey(fromJson: avatarPathFromJson, name: 'avatar')
   final String? avatarPath;
 
   const UserModel({
@@ -21,17 +22,8 @@ class UserModel extends Equatable {
 
   String toJson() => json.encode(toMap());
 
-  // factory UserModel.fromMap(Map<String, dynamic> json) =>
-  //     _$UserModelFromJson(json);
-  factory UserModel.fromMap(Map<String, dynamic> json) {
-    final avatarPath = json['avatar']['tmdb']?['avatar_path'] as String?;
-
-    return UserModel(
-      id: json['id'] as int,
-      username: json['username'] as String,
-      avatarPath: avatarPath,
-    );
-  }
+  factory UserModel.fromMap(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 
   Map<String, dynamic> toMap() => _$UserModelToJson(this);
 
@@ -40,4 +32,8 @@ class UserModel extends Equatable {
         id,
         username,
       ];
+}
+
+String? avatarPathFromJson(Map<String, dynamic> json) {
+  return json['tmdb']?['avatar_path'] as String?;
 }

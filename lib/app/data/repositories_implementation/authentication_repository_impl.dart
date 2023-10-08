@@ -3,7 +3,7 @@ import 'package:flutter_movies_ca/app/data/services/remote/account_api.dart';
 import 'package:flutter_movies_ca/app/data/services/remote/authentication_api.dart';
 import 'package:flutter_movies_ca/app/domain/either.dart';
 import 'package:flutter_movies_ca/app/domain/enums.dart';
-import 'package:flutter_movies_ca/app/domain/models/user.dart';
+import 'package:flutter_movies_ca/app/domain/models/user/user.dart';
 import 'package:flutter_movies_ca/app/domain/repositories/authentication_repository.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
